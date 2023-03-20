@@ -24,4 +24,9 @@ public class HelloController {
 
         return "redirect:/hello";
     }
+
+    @GetMapping("admin")
+    public String adminPage() {
+        return "admin";
+    }
 }
