@@ -35,7 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable() // отключаем защиту от межсайтовой подделки запросов
-                .authorizeHttpRequests().requestMatchers("/auth/login", "/error").permitAll()
+                .authorizeHttpRequests().requestMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin()
                 .loginPage("/auth/login") // Custom login page
@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/showUserInfo", true)
                 .failureUrl("/auth/login?error")
                 .and()
-                .logout().permitAll()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/auth/login")
                 .and().userDetailsService(userDetailsService());
 
         return http.build();
