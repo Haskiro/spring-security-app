@@ -34,11 +34,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests().requestMatchers("/login").permitAll()
+                .csrf().disable() // отключаем защиту от межсайтовой подделки запросов
+                .authorizeHttpRequests().requestMatchers("/auth/login", "/error").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin()
-                 .usernameParameter("username")
-                .permitAll()
+                .loginPage("/auth/login") // Custom login page
+                .loginProcessingUrl("/process_login")
+                .usernameParameter("username")
+                .defaultSuccessUrl("/showUserInfo", true)
+                .failureUrl("/auth/login?error")
                 .and()
                 .logout().permitAll()
                 .and().userDetailsService(userDetailsService());
